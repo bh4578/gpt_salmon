@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="{% static 'jquery.js' %}"></script>
+<title>AI Product Interface</title>
+<style>
+
+  .container {
+    max-width: 600px;
+    margin-top: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+    }
+  input[type="text"], textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    }
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    }
+  button:hover {
+    background: #555;
+    }
+  #response {
+    margin-top: 10px;
+    padding: 10px;
+    background: #e7e7e7;
+    border-radius: 5px;
+    }
+  .copy-button {
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    margin-top: 5px;
+    margin-left: auto;
+    display: block;
+    }
+    .loader-container { /* New container for the loader */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; /* This centers the loading indicator vertically */
+    }
+    #loadingIndicator {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    animation: spin 1s linear infinite;
+    margin-left: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <textarea type="text" id="product-description" rows="4" placeholder="产品介绍"></textarea>
+  <textarea type="text" id="background" rows="4" placeholder="背景介绍"></textarea>
+  <textarea type="text" id="inspiration-story" rows="4" placeholder="灵感故事"></textarea>
+  <textarea type="text" id="core-elements" rows="1" placeholder="核心元素/关键点"></textarea>
+  <textarea type="text" id="style" style="margin-bottom: 0" rows="1" placeholder="语气风格"></textarea>
+  <div style="display: flex; justify-content: flex-end;">
+  <input type="checkbox" id="myCheckbox" name="myCheckbox">
+  <label for="myCheckbox" style="font-size: small">具体样例</label>
+  </div>
+  <div class="loader-container">
+  <button onclick="submitAIRequest()">Generate</button>
+  <div id="loadingIndicator" style="display: none"></div>
+  </div>
+
+  <div id="response">
+    <p id="ai-response">Your AI-generated text will appear here...</p>
+    <button class="copy-button" onclick="copyToClipboard()">Copy Text</button>
+  </div>
+</div>
+
+<script>
+    // 改为使用const/let声明变量
+
+
+
+  // 缓存DOM引用
+
+
+
+  function submitAIRequest() {
+    const productDescriptionEl = document.getElementById('product-description');
+    const backgroundDescriptionEl = document.getElementById('background');
+    const inspirationDescriptionEl = document.getElementById('inspiration-story');
+    const coreDescriptionEl = document.getElementById('core-elements');
+    const styleDescriptionEl = document.getElementById('style');
+    const generateButtonEl = document.getElementById('generateButton');
+
+    // 从缓存的DOM元素获取值
+    let product = productDescriptionEl.value;
+    let background = backgroundDescriptionEl.value;
+    let inspiration = inspirationDescriptionEl.value;
+    let core = coreDescriptionEl.value;
+    let style = styleDescriptionEl.value;
+
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ product,background,inspiration,core,style}));
+      $('#loadingIndicator').css("display","inline-block")
+    } else {
+      // 可以在这里通知用户WebSocket未连接
+      console.error("WebSocket is not open.");
+      // 可以在这里禁用生成按钮，或者显示一条消息
+      generateButtonEl.disabled = true;
+    }
+    messageBuffer = '';
+  }
+
+  socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    const aiResponseEl = document.getElementById('ai-response');
+
+    if ("message" in data){
+        messageBuffer += data.message;
+        aiResponseEl.innerHTML = messageBuffer; // 改为使用textContent
+        console.log('Message from server ', data.message);
+    }
+    if ("state" in data){
+        if(data.state === 1){
+            $('#loadingIndicator').css("display","none")
+        }
+    }
+
+  };
+
+  function copyToClipboard() {
+    // 优化错误处理
+    const aiResponseEl = document.getElementById('ai-response');
+    navigator.clipboard.writeText(aiResponseEl.textContent).then(function() {
+      alert('Text copied t  o clipboard');
+    }).catch(function(error) {
+        console.error('Error in copying text: ', error);
+        alert('Error in copying text: ' + error);
+    });}
+
+</script>
+</body>
+</html>

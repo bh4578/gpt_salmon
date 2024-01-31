@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'jquery.js' %}"></script>
+    <title>iThinkScene</title>
+    <style>
+        html{
+            height: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            height: 100%;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        main {
+            display: flex; /* 启用flex布局 */
+            align-items: flex-start; /* 以防列表内容不足以填满高度 */
+            height: calc(100vh - 61px); /* 保持您已设置的高度 */
+            margin: 0;
+            overflow: hidden; /* 隐藏溢出的内容 */
+        }
+
+        .list {
+            width: 200px; /* 您已设置的固定宽度 */
+            height: 100%; /* 使其高度填满main元素 */
+            box-shadow: 5px 2px 3px rgba(0, 0, 1, 0.1);
+            /* 不需要更改 */
+
+        }
+
+        .list .func {
+            padding: 10px;
+            /* 不需要更改 */
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+        .list .func:hover{
+
+            background:palegoldenrod;
+        }
+
+        .dis_func {
+            flex-grow: 1; /* 新增，使其填满剩余空间 */
+            height: 100%; /* 使其高度填满main元素 */
+            /* 移除宽度设置，因为flex-grow将处理宽度 */
+            margin-left: 50px;
+            margin-right: 50px;
+            overflow-y: auto;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">CWSC_Demo</div>
+        <nav>
+            <a href="#">注册/登录</a>
+            <!-- ... 更多链接 -->
+        </nav>
+    </header>
+    <main>
+        <div class="list">
+            <div class="func" onclick="salmon()" >salmon文案</div>
+            <div class="func">功能二</div>
+            <div class="func">功能三</div>
+        </div>
+        <div class="dis_func" id="salmon">
+
+        </div>
+
+    </main>
+</body>
+
+<script>
+    const socket = new WebSocket('ws://110.41.48.238:80/ws/gpt/');
+    let messageBuffer = '';
+
+    function salmon(){
+        var salmon = $("#salmon")
+        $.ajax({
+        url: 'salmon/',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data) {
+            salmon.html(data);
+        },
+        error: function (error) {
+            console.error('Failed to load content:', error);
+        }
+    });
+    }
+
+
+
+</script>
+</html>
