@@ -14,8 +14,8 @@ __不懂的命令可以问chatgpt__
 demo示例地址：  
 http://110.41.48.238/  
 
-gpt_salmon 文件夹中 存放配置文件
-gpt_service 文件夹中存放gpt相关的代码
-static 文件夹中存放静态文件，如图片、js文件、css文件等
-templates文件夹中存放前端代码
-views文件夹中存放后端渲染代码
+gpt_salmon 文件夹中 存放配置文件  
+gpt_service 文件夹中存放gpt相关的代码  
+static 文件夹中存放静态文件，如图片、js文件、css文件等  
+templates文件夹中存放前端代码  
+views文件夹中存放后端渲染代码  
