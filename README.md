@@ -29,8 +29,8 @@ python manage.py migrate
 }  
 **5.运行daphne异步服务器 daphne -p 8000 -b 0.0.0.0 your_project_name.asgi:application**  
 **6.运行nginx**  
-**7.因为gpt需要境外网络访问，因此需要开启代理，这里是clash**  
-nohup ./clash -f config.yaml  
+**7.因为gpt需要境外网络访问，因此需要开启代理，这里是clash，如何配置clash可以百度**  
+开启clash命令：nohup ./clash -f config.yaml  
   
 __不懂的命令可以问chatgpt__  
   
